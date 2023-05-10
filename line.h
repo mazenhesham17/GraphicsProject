@@ -7,6 +7,8 @@
 using namespace std;
 
 
+
+
 void ParametricLine(HDC hdc,int xs,int ys,int xe,int ye,COLORREF c)
 {
     int dx = xe - xs;
@@ -183,6 +185,35 @@ void MidPointLine( HDC hdc, int xs, int ys, int xe, int ye, COLORREF c )
     }
 }
 
+void QuarterLine( HDC hdc, int xs, int ys, int x, int y , COLORREF c , int quarter )
+{
+    switch ( quarter )
+    {
+    case 1:
+        MidPointLine(hdc,xs,ys,xs+x,ys-y,c) ;
+        swap(x,y) ;
+        MidPointLine(hdc,xs,ys,xs+x,ys-y,c) ;
+        break;
+    case 2:
+        MidPointLine(hdc,xs,ys,xs+x,ys+y,c) ;
+        swap(x,y) ;
+        MidPointLine(hdc,xs,ys,xs+x,ys+y,c) ;
+        break;
+    case 3:
+        MidPointLine(hdc,xs,ys,xs-x,ys+y,c) ;
+        swap(x,y);
+        MidPointLine(hdc,xs,ys,xs-x,ys+y,c) ;
+        break;
+    case 4:
+        MidPointLine(hdc,xs,ys,xs-x,ys-y,c) ;
+        swap(x,y) ;
+        MidPointLine(hdc,xs,ys,xs-x,ys-y,c) ;
+        break;
+    default:
+        break;
+    }
+}
+
 void DrawLine( HDC hdc, int xs, int ys, int xe, int ye, COLORREF c , int choice )
 {
     if ( choice == 0 )
@@ -195,7 +226,7 @@ void DrawLine( HDC hdc, int xs, int ys, int xe, int ye, COLORREF c , int choice 
     }
     else
     {
-        ParametricLine(hdc,xs,ys,xe,ye,c) ;
+        MidPointLine(hdc,xs,ys,xe,ye,c) ;
     }
 }
 

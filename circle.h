@@ -4,7 +4,39 @@
 #include<cmath>
 #include<algorithm>
 
+using namespace std ;
+
 const double PI = 3.14159265359 ;
+
+
+void DrawQuarterPoints( HDC hdc, int xs, int ys, int x, int y , COLORREF c , int quarter ){
+    switch ( quarter )
+    {
+    case 1:
+        SetPixel( hdc, xs + x, ys - y, c) ;
+        swap(x,y) ;
+        SetPixel( hdc, xs + x, ys - y, c) ;
+        break;
+    case 2:
+        SetPixel(hdc, xs + x, ys + y,c) ;
+        swap(x,y) ;
+        SetPixel(hdc, xs + x, ys + y,c) ;
+        break;
+    case 3:
+        SetPixel( hdc, xs - x, ys + y, c) ;
+        swap(x,y);
+        SetPixel( hdc, xs - x, ys + y, c) ;
+        break;
+    case 4:
+        SetPixel( hdc, xs - x, ys - y, c) ;
+        swap(x,y) ;
+        SetPixel( hdc, xs - x, ys - y, c) ;
+        break;
+    default:
+        break;
+    }
+}
+
 
 void Draw8Points( HDC hdc, int xs, int ys, int x, int y, COLORREF c )
 {
@@ -60,13 +92,20 @@ void IterativePolarCircle(HDC hdc, int xs, int ys, int R, COLORREF c)
     }
 }
 
-void MidPointCircle( HDC hdc, int xs, int ys, int r, COLORREF c )
+void MidPointCircle( HDC hdc, int xs, int ys, int r , COLORREF c , int quarter )
 {
     int dinit = 1 - r ;
     int x = 0, y = r ;
     while( y > x )
     {
-        Draw8Points(hdc,xs,ys,x,y,c) ;
+        if ( quarter != -1 )
+        {
+            DrawQuarterPoints(hdc,xs,ys,x,y,c,quarter) ;
+        }
+        else
+        {
+            Draw8Points(hdc,xs,ys,x,y,c) ;
+        }
         if ( dinit <= 0 )
         {
             dinit += 2*x + 3 ;
@@ -104,6 +143,10 @@ void ModifiedMidPointCircle( HDC hdc, int xs, int ys, int r, COLORREF c )
     }
 }
 
+void DrawQuaterCircle( HDC hdc, int xs, int ys, int R, COLORREF c , int quarter ){
+    MidPointCircle(hdc,xs,ys,R,c,quarter) ;
+}
+
 void DrawCircle( HDC hdc, int xs, int ys, int R, COLORREF c, int choice )
 {
     if ( choice == 0 )
@@ -120,7 +163,7 @@ void DrawCircle( HDC hdc, int xs, int ys, int R, COLORREF c, int choice )
     }
     else if ( choice == 3 )
     {
-        MidPointCircle(hdc,xs,ys,R,c) ;
+        MidPointCircle(hdc,xs,ys,R,c,-1) ;
     }
     else
     {

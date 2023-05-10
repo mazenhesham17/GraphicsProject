@@ -132,7 +132,8 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
     static int idx = -1 ;
     static int xs = -1, ys = -1 , xe = -1 , ye = -1 ;
     HDC hdc ;
-    COLORREF WHITE = RGB(255,255,255), c ;
+    COLORREF WHITE = RGB(255,255,255) ;
+    COLORREF bordercolor = RGB(255,0,0) , fillcolor = RGB(0,0,255) ;
     switch (message)                  /* handle the messages */
     {
     case WM_COMMAND:
@@ -165,24 +166,32 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
         }else if ( idx == 7 )
         {
             hdc = GetDC(hwnd) ;
-            c = RGB(255,0,0) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawCircle(hdc,xs,ys,70,c,0) ;
+            DrawCircle(hdc,xs,ys,80,bordercolor,3) ;
         }else if ( idx == 8 ){
             hdc = GetDC(hwnd) ;
-            c = RGB(255,0,0) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawEllipse(hdc,xs,ys,70,140,c,2) ;
+            DrawEllipse(hdc,xs,ys,70,140,bordercolor,1) ;
+        }else if ( idx == 9 ){
+            hdc = GetDC(hwnd) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawCircle(hdc,xs,ys,80,bordercolor,0) ;
+            FillWithLines(hdc,xs,ys,80,fillcolor,1) ;
+        }else if ( idx == 10 ){
+            hdc = GetDC(hwnd) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawCircle(hdc,xs,ys,80,bordercolor,0) ;
+            FillWithCircles(hdc,xs,ys,80,fillcolor,1) ;
         }else if ( idx == 11  ){
             hdc = GetDC(hwnd) ;
-            c = RGB(255,0,0) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawSquare(hdc,xs,ys,xe,ye,250,c) ;
-            c = RGB(0,0,255) ;
-            FillWithHermite(hdc,xs,ys,xe,ye,c) ;
+            DrawSquare(hdc,xs,ys,xe,ye,250,bordercolor) ;
+            FillWithHermite(hdc,xs,ys,xe,ye,fillcolor) ;
         }else if ( idx == 12 ){
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
@@ -192,18 +201,15 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
         if ( idx == 6 )
         {
             hdc = GetDC(hwnd) ;
-            c = RGB(255,0,0) ;
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
-            DrawLine(hdc,xs,ys,xe,ye,c,0) ;
+            DrawLine(hdc,xs,ys,xe,ye,bordercolor,0) ;
         }else if ( idx == 12 ){
             hdc = GetDC(hwnd) ;
-            c = RGB(255,0,0) ;
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
-            DrawRectangle(hdc,xs,ys,xe,ye,c) ;
-            c = RGB(0,0,255) ;
-            FillWithBezier(hdc,xs,ys,xe,ye,c) ;
+            DrawRectangle(hdc,xs,ys,xe,ye,bordercolor) ;
+            FillWithBezier(hdc,xs,ys,xe,ye,fillcolor) ;
         }
         break;
     case WM_DESTROY:

@@ -14,7 +14,7 @@ struct Point
     }
 };
 
-void DrawHermiteCurve( HDC hdc, Point p0, Point s0, Point p1, Point s1, COLORREF c )
+void HermiteCurve( HDC hdc, Point p0, Point s0, Point p1, Point s1, COLORREF c )
 {
     double a3 = 2*p0.x + s0.x -2*p1.x + s1.x ;
     double b3 = 2*p0.y + s0.y -2*p1.y + s1.y ;
@@ -32,22 +32,22 @@ void DrawHermiteCurve( HDC hdc, Point p0, Point s0, Point p1, Point s1, COLORREF
     }
 }
 
-void DrawBezierCurve( HDC hdc, Point p0, Point p1, Point p2, Point p3, COLORREF c )
+void BezierCurve( HDC hdc, Point p0, Point p1, Point p2, Point p3, COLORREF c )
 {
     Point s0 = Point(3*(p1.x-p0.x),3*(p1.y-p0.y)) ;
     Point s1 = Point(3*(p3.x-p2.x),3*(p3.y-p2.y)) ;
-    DrawHermiteCurve(hdc,p0,s0,p3,s1,c) ;
+    HermiteCurve(hdc,p0,s0,p3,s1,c) ;
 }
 
 void DrawCurve( HDC hdc, Point p0, Point p1, Point p2, Point p3, COLORREF c, int choice )
 {
     if ( choice == 0 )
     {
-        DrawHermiteCurve(hdc,p0,p1,p2,p3,c) ;
+        HermiteCurve(hdc,p0,p1,p2,p3,c) ;
     }
     else
     {
-        DrawBezierCurve(hdc,p0,p1,p2,p3,c) ;
+        BezierCurve(hdc,p0,p1,p2,p3,c) ;
     }
 }
 

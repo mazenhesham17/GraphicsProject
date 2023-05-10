@@ -40,6 +40,9 @@
 		<Unit filename="circle.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="csgraphics.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="curve.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
