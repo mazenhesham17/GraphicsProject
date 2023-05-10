@@ -11,6 +11,7 @@
 
 using namespace std ;
 
+
 string titles[] =
 {
     "Change the background",
@@ -195,6 +196,11 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
         }else if ( idx == 12 ){
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
+        }else if ( idx == 15 || idx == 16 ){
+            hdc = GetDC(hwnd) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawCircle(hdc,xs,ys,40,bordercolor,3) ;
         }
         break;
     case WM_RBUTTONDBLCLK:
@@ -210,6 +216,16 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             ye = HIWORD(lParam) ;
             DrawRectangle(hdc,xs,ys,xe,ye,bordercolor) ;
             FillWithBezier(hdc,xs,ys,xe,ye,fillcolor) ;
+        }else if ( idx == 15 ){
+            hdc = GetDC(hwnd) ;
+            xe = LOWORD(lParam) ;
+            ye = HIWORD(lParam) ;
+            RecursiveFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
+        }else if ( idx == 16 ){
+            hdc = GetDC(hwnd) ;
+            xe = LOWORD(lParam) ;
+            ye = HIWORD(lParam) ;
+            IterativeFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
         }
         break;
     case WM_DESTROY:

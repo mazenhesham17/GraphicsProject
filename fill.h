@@ -4,6 +4,12 @@
 #include "circle.h"
 #include "curve.h"
 #include "line.h"
+#include <stack>
+
+using namespace std ;
+
+
+int dx[] = {+0, +0, +1, -1, +1, -1, +1, -1} , dy[] = {+1, -1, +0, +0, +1, -1, -1, +1};
 
 void FillWithHermite(HDC hdc, int xleft, int ytop, int xright, int ybottom, COLORREF c )
 {
@@ -57,6 +63,35 @@ void FillWithLines(HDC hdc, int xs, int ys, int R, COLORREF c , int quarter )
         }
         x++ ;
         cnt++ ;
+    }
+}
+
+void RecursiveFloodFill( HDC hdc , int x , int y , COLORREF fc , COLORREF bc ){
+    COLORREF cur = GetPixel(hdc,x,y) ;
+    if ( cur == bc || cur == fc )
+        return;
+    SetPixel(hdc,x,y,fc) ;
+    for ( int i = 0 ; i < 4 ; i++ ){
+        RecursiveFloodFill(hdc,x+dx[i],y+dy[i],fc,bc) ;
+    }
+}
+
+void IterativeFloodFill(HDC hdc,int x,int y,COLORREF fc,COLORREF bc)
+{
+    stack<Point>S;
+    S.push(Point(x,y));
+    while(!S.empty())
+    {
+        Point v=S.top();
+        S.pop();
+        COLORREF c = GetPixel(hdc ,v.x,v.y);
+        if(c==bc || c==fc)
+            continue;
+        SetPixel(hdc,v.x,v.y,fc);
+        S.push(Point(v.x+1,v.y));
+        S.push(Point(v.x-1,v.y));
+        S.push(Point(v.x,v.y+1));
+        S.push(Point(v.x,v.y-1));
     }
 }
 
