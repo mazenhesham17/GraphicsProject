@@ -43,6 +43,9 @@
 		<Unit filename="curve.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="ellipse.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="fill.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

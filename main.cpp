@@ -7,10 +7,7 @@
 #include <tchar.h>
 #include <windows.h>
 #include <string>
-#include "circle.h"
-#include "line.h"
-#include "rectangle.h"
-#include "fill.h"
+#include "csgraphics.h"
 
 using namespace std ;
 
@@ -172,6 +169,12 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
             DrawCircle(hdc,xs,ys,70,c,0) ;
+        }else if ( idx == 8 ){
+            hdc = GetDC(hwnd) ;
+            c = RGB(255,0,0) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawEllipse(hdc,xs,ys,70,140,c,2) ;
         }else if ( idx == 11  ){
             hdc = GetDC(hwnd) ;
             c = RGB(255,0,0) ;
