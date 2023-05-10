@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <string>
 #include "circle.h"
+#include "line.h"
 
 using namespace std ;
 
@@ -18,7 +19,7 @@ string titles[] =
     "Change the drawing color",
     "Clear Screen",
     "Save Screen",
-    "Load Data",
+    "Load Screen",
     "Draw Line",
     "Draw Circle",
     "Draw Ellipse",
@@ -130,7 +131,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
 LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static int idx = -1 ;
-    static int x = -1, y = -1 ;
+    static int xs = -1, ys = -1 , xe = -1 , ye = -1 ;
     HDC hdc ;
     COLORREF WHITE = RGB(255,255,255), c ;
     switch (message)                  /* handle the messages */
@@ -157,18 +158,32 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             }
         }
         break;
-    case WM_DESTROY:
-        PostQuitMessage (0);       /* send a WM_QUIT to the message queue */
-        break;
+
     case WM_LBUTTONDBLCLK:
+        if ( idx == 6 ){
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+        }else if ( idx == 7 )
+        {
+            hdc = GetDC(hwnd) ;
+            c = RGB(255,0,0) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawCircle(hdc,xs,ys,70,c,0) ;
+        }
+        break;
+    case WM_RBUTTONDBLCLK:
         if ( idx == 6 )
         {
             hdc = GetDC(hwnd) ;
             c = RGB(255,0,0) ;
-            x = LOWORD(lParam) ;
-            y = HIWORD(lParam) ;
-            DrawCircle(hdc,x,y,100,c,0) ;
+            xe = LOWORD(lParam) ;
+            ye = HIWORD(lParam) ;
+            DrawLine(hdc,xs,ys,xe,ye,c,0) ;
         }
+        break;
+    case WM_DESTROY:
+        PostQuitMessage (0);       /* send a WM_QUIT to the message queue */
         break;
     default:                      /* for messages that we don't deal with */
         return DefWindowProc (hwnd, message, wParam, lParam);
