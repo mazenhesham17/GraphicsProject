@@ -29,8 +29,7 @@ string titles[] =
     "Fill rectangle with Bezier Curve",
     "Convex Filling",
     "Non Convex Filling",
-    "Recursive Flood Fill",
-    "Iterative Flood Fill",
+    "Flood Fill",
     "Cardinal Spline Curve",
     "Clipping using Rectangle",
     "Clipping using Square",
@@ -104,7 +103,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
                 );
 
     /* Add items to the combo box */
-    for ( int i = 0 ; i < 21 ; i++ )
+    for ( int i = 0 ; i < 20 ; i++ )
     {
         SendMessage(hwndCombo, CB_ADDSTRING, 0, (LPARAM)titles[i].c_str());
     }
@@ -125,16 +124,30 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
     return messages.wParam;
 }
 
+int fixColor( int x )
+{
+    if ( x < 0 )
+    {
+        x = 0 ;
+    }
+    else if ( x > 255 )
+    {
+        x = 255 ;
+    }
+    return x ;
+}
 
 /*  This function is called by the Windows function DispatchMessage()  */
 
 LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static int idx = -1 ;
-    static int xs = -1, ys = -1 , xe = -1 , ye = -1 ;
+    static int idx = -1, choice = -1 ;
+    static int xs = -1, ys = -1, xe = -1, ye = -1 ;
+    static int r = -1, g = -1, b = -1 ;
     HDC hdc ;
+    HWND hconsole = GetConsoleWindow() ;
     COLORREF WHITE = RGB(255,255,255) ;
-    COLORREF bordercolor = RGB(255,0,0) , fillcolor = RGB(0,0,255) ;
+    static COLORREF bordercolor = RGB(255,0,0), fillcolor = RGB(0,0,255) ;
     switch (message)                  /* handle the messages */
     {
     case WM_COMMAND:
@@ -152,51 +165,153 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
                 // change the shape of the mouse
                 SetClassLongPtrA(hwnd,GCLP_HCURSOR,(LONG_PTR)LoadCursor(NULL, IDC_CROSS)  ) ;
             }
+            else if ( idx == 2 )
+            {
+                // change the color of drawing
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1.Border Color\n") ;
+                printf("2.Fill Color\n") ;
+                printf("Choose the color to change : ") ;
+                scanf("%d",&choice) ;
+                printf("Enter the new color in (R,G,B) : ") ;
+                scanf("%d %d %d",&r,&g,&b) ;
+                r = fixColor(r), g = fixColor(g), b = fixColor(b) ;
+                if ( choice == 1 )
+                {
+                    bordercolor = RGB(r,g,b) ;
+                }
+                else
+                {
+                    fillcolor = RGB(r,g,b) ;
+                }
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
             else if ( idx == 3 )
             {
                 // clear the screen
                 InvalidateRect(hwnd,NULL,true) ;
             }
+            else if ( idx == 6 )
+            {
+                // choose the line algorithm
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1.Parametric Line\n") ;
+                printf("2.DDA Line\n") ;
+                printf("3.Midpoint Line\n") ;
+                printf("Choose algorithm : ") ;
+                scanf("%d",&choice) ;
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
+            else if ( idx == 7 )
+            {
+                // choose the circle algorithm
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1.Direct Circle\n") ;
+                printf("2.Polar Circle\n") ;
+                printf("3.Iterative Polar Circle\n") ;
+                printf("4.Midpoint Circle\n") ;
+                printf("5.Modified Midpoint Circle\n") ;
+                printf("Choose algorithm : ") ;
+                scanf("%d",&choice) ;
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
+            else if ( idx == 8 )
+            {
+                // choose the ellipse algorithm
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1.Direct Ellipse\n") ;
+                printf("2.Polar Ellipse\n") ;
+                printf("3.Midpoint Ellipse\n") ;
+                printf("Choose algorithm : ") ;
+                scanf("%d",&choice) ;
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
+            else if ( idx == 9 || idx == 10 )
+            {
+                // choose the filling quarter
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1. (x,y)\n") ;
+                printf("2. (x,-y)\n") ;
+                printf("3. (-x,-y)\n") ;
+                printf("4. (-x,y)\n") ;
+                printf("Choose quarter : ") ;
+                scanf("%d",&choice) ;
+                if ( choice < 1 || choice > 4 )
+                    choice = 1 ;
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }else if ( idx == 15 ){
+                // choose the filling algorithm
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1. Recursive Flood Fill\n") ;
+                printf("2. Iterative Flood Fill\n") ;
+                printf("Choose algorithm : ") ;
+                scanf("%d",&choice) ;
+                printf("\n") ;
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
         }
         break;
-
     case WM_LBUTTONDBLCLK:
-        if ( idx == 6 ){
+        if ( idx == 6 )
+        {
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-        }else if ( idx == 7 )
+        }
+        else if ( idx == 7 )
         {
             hdc = GetDC(hwnd) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawCircle(hdc,xs,ys,80,bordercolor,3) ;
-        }else if ( idx == 8 ){
+            DrawCircle(hdc,xs,ys,80,bordercolor,choice-1) ;
+        }
+        else if ( idx == 8 )
+        {
             hdc = GetDC(hwnd) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawEllipse(hdc,xs,ys,70,140,bordercolor,1) ;
-        }else if ( idx == 9 ){
+            DrawEllipse(hdc,xs,ys,70,140,bordercolor,choice-1) ;
+        }
+        else if ( idx == 9 || idx == 10 )
+        {
             hdc = GetDC(hwnd) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-            DrawCircle(hdc,xs,ys,80,bordercolor,0) ;
-            FillWithLines(hdc,xs,ys,80,fillcolor,1) ;
-        }else if ( idx == 10 ){
-            hdc = GetDC(hwnd) ;
-            xs = LOWORD(lParam) ;
-            ys = HIWORD(lParam) ;
-            DrawCircle(hdc,xs,ys,80,bordercolor,0) ;
-            FillWithCircles(hdc,xs,ys,80,fillcolor,1) ;
-        }else if ( idx == 11  ){
+            DrawCircle(hdc,xs,ys,80,bordercolor,4) ;
+            if ( idx == 9 )
+            {
+                FillWithLines(hdc,xs,ys,80,fillcolor,choice) ;
+            }
+            else
+            {
+                FillWithCircles(hdc,xs,ys,80,fillcolor,choice) ;
+            }
+        }
+        else if ( idx == 11  )
+        {
             hdc = GetDC(hwnd) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
             DrawSquare(hdc,xs,ys,xe,ye,250,bordercolor) ;
             FillWithHermite(hdc,xs,ys,xe,ye,fillcolor) ;
-        }else if ( idx == 12 ){
+        }
+        else if ( idx == 12 )
+        {
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
-        }else if ( idx == 15 || idx == 16 ){
+        }
+        else if ( idx == 15 )
+        {
             hdc = GetDC(hwnd) ;
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
@@ -209,23 +324,26 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             hdc = GetDC(hwnd) ;
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
-            DrawLine(hdc,xs,ys,xe,ye,bordercolor,0) ;
-        }else if ( idx == 12 ){
+            DrawLine(hdc,xs,ys,xe,ye,bordercolor,choice-1) ;
+        }
+        else if ( idx == 12 )
+        {
             hdc = GetDC(hwnd) ;
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
             DrawRectangle(hdc,xs,ys,xe,ye,bordercolor) ;
             FillWithBezier(hdc,xs,ys,xe,ye,fillcolor) ;
-        }else if ( idx == 15 ){
+        }
+        else if ( idx == 15 )
+        {
             hdc = GetDC(hwnd) ;
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
-            RecursiveFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
-        }else if ( idx == 16 ){
-            hdc = GetDC(hwnd) ;
-            xe = LOWORD(lParam) ;
-            ye = HIWORD(lParam) ;
-            IterativeFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
+            if ( choice == 1 ){
+                RecursiveFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
+            }else{
+                IterativeFloodFill(hdc,xe,ye,fillcolor,bordercolor) ;
+            }
         }
         break;
     case WM_DESTROY:

@@ -74,10 +74,13 @@ void MidPointEllipse( HDC hdc, int xs , int ys , int a , int b , COLORREF c ){
 
 void DrawEllipse( HDC hdc, int xs , int ys , int a , int b , COLORREF c , int choice ){
     if ( choice == 0 ){
+        printf("Direct Ellipse is drawn\n\n") ;
         DirectEllipse(hdc,xs,ys,a,b,c) ;
     }else if ( choice == 1 ){
+        printf("Polar Ellipse is drawn\n\n") ;
         PolarEllipse(hdc,xs,ys,a,b,c) ;
     }else{
+        printf("Midpoint Ellipse is drawn\n\n") ;
         MidPointEllipse(hdc,xs,ys,a,b,c) ;
     }
 }

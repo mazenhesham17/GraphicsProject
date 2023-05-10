@@ -151,22 +151,27 @@ void DrawCircle( HDC hdc, int xs, int ys, int R, COLORREF c, int choice )
 {
     if ( choice == 0 )
     {
+        printf("Direct Circle is drawn\n\n") ;
         DirectCircle(hdc,xs,ys,R,c) ;
     }
     else if ( choice == 1 )
     {
+        printf("Polar Circle is drawn\n\n") ;
         PolarCircle(hdc,xs,ys,R,c) ;
     }
     else if ( choice == 2 )
     {
+        printf("Iterative Polar Circle is drawn\n\n") ;
         IterativePolarCircle(hdc,xs,ys,R,c) ;
     }
     else if ( choice == 3 )
     {
+        printf("Midpoint Circle is drawn\n\n") ;
         MidPointCircle(hdc,xs,ys,R,c,-1) ;
     }
     else
     {
+        printf("Modified Midpoint Circle is drawn\n\n") ;
         ModifiedMidPointCircle(hdc,xs,ys,R,c) ;
     }
 }

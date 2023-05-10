@@ -218,14 +218,17 @@ void DrawLine( HDC hdc, int xs, int ys, int xe, int ye, COLORREF c , int choice 
 {
     if ( choice == 0 )
     {
+        printf("Parametric Line is drawn\n\n") ;
         ParametricLine(hdc,xs,ys,xe,ye,c) ;
     }
     else if ( choice == 1 )
     {
+        printf("DDA Line is drawn\n\n") ;
         DDALine(hdc,xs,ys,xe,ye,c) ;
     }
     else
     {
+        printf("MidPoint Line is drawn\n\n") ;
         MidPointLine(hdc,xs,ys,xe,ye,c) ;
     }
 }
