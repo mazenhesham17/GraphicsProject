@@ -9,6 +9,8 @@
 #include <string>
 #include "circle.h"
 #include "line.h"
+#include "rectangle.h"
+#include "fill.h"
 
 using namespace std ;
 
@@ -170,6 +172,17 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             xs = LOWORD(lParam) ;
             ys = HIWORD(lParam) ;
             DrawCircle(hdc,xs,ys,70,c,0) ;
+        }else if ( idx == 11  ){
+            hdc = GetDC(hwnd) ;
+            c = RGB(255,0,0) ;
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
+            DrawSquare(hdc,xs,ys,xe,ye,250,c) ;
+            c = RGB(0,0,255) ;
+            FillWithHermite(hdc,xs,ys,xe,ye,c) ;
+        }else if ( idx == 12 ){
+            xs = LOWORD(lParam) ;
+            ys = HIWORD(lParam) ;
         }
         break;
     case WM_RBUTTONDBLCLK:
@@ -180,6 +193,14 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
             xe = LOWORD(lParam) ;
             ye = HIWORD(lParam) ;
             DrawLine(hdc,xs,ys,xe,ye,c,0) ;
+        }else if ( idx == 12 ){
+            hdc = GetDC(hwnd) ;
+            c = RGB(255,0,0) ;
+            xe = LOWORD(lParam) ;
+            ye = HIWORD(lParam) ;
+            DrawRectangle(hdc,xs,ys,xe,ye,c) ;
+            c = RGB(0,0,255) ;
+            FillWithBezier(hdc,xs,ys,xe,ye,c) ;
         }
         break;
     case WM_DESTROY:
