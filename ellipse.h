@@ -1,87 +1,106 @@
 #ifndef ELLIPSE_H_INCLUDED
 #define ELLIPSE_H_INCLUDED
 
-#include<cmath>
-#include<algorithm>
+#include <cmath>
+#include <algorithm>
 
-// const double PI = 3.14159265359 ;
-
-void Draw4Points( HDC hdc , int xs , int ys , int x , int y , COLORREF c ){
-    int dx[] = {1,1,-1,-1} , dy[] = {-1,1,-1,1} ;
-    for ( int j = 0 ; j < 4 ; j++ ){
-        SetPixel(hdc,xs+ dx[j]*x , ys + dy[j]*y ,c) ;
+void Draw4Points(HDC hdc, int xs, int ys, int x, int y, COLORREF c)
+{
+    int dx[] = {1, 1, -1, -1}, dy[] = {-1, 1, -1, 1};
+    for (int j = 0; j < 4; j++)
+    {
+        SetPixel(hdc, xs + dx[j] * x, ys + dy[j] * y, c);
     }
 }
 
-void DirectEllipse( HDC hdc, int xs , int ys , int a , int b , COLORREF c ){
-    double x = 0 , y = b ;
-    while ( x*x*b*b <= y*y*a*a ){
-        int xc = round(x) ;
-        int yc = round(y) ;
-        Draw4Points(hdc,xs,ys,xc,yc,c) ;
-        x++ ;
-        y = sqrt( ( 1 - ( x*x )/( a*a ) )*(b*b) ) ;
+void DirectEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c)
+{
+    double x = 0, y = b;
+    while (x * x * b * b <= y * y * a * a)
+    {
+        int xc = round(x);
+        int yc = round(y);
+        Draw4Points(hdc, xs, ys, xc, yc, c);
+        x++;
+        y = sqrt((1 - (x * x) / (a * a)) * (b * b));
     }
-    x = a , y = 0 ;
-    while ( x*x*b*b >= y*y*a*a ){
-        int xc = round(x) ;
-        int yc = round(y) ;
-        Draw4Points(hdc,xs,ys,xc,yc,c) ;
-        y++ ;
-        x = sqrt( ( 1 - ( y*y )/( b*b ) )*(a*a) ) ;
-    }
-}
-
-void PolarEllipse( HDC hdc , int xs , int ys , int a , int b , COLORREF c ){
-    double x = a , y = 0 ;
-    double theta = 0 , dtheta = 1.0/max(a,b) ;
-    double dcos = cos(dtheta) , dsin = sin(dtheta) ;
-    while ( theta < PI/2 ){
-        Draw4Points(hdc,xs,ys,round(x),round(y),c) ;
-        x = x*dcos - a*y/b * dsin ;
-        y = y*dcos + x*b/a * dsin ;
-        theta += dtheta ;
+    x = a, y = 0;
+    while (x * x * b * b >= y * y * a * a)
+    {
+        int xc = round(x);
+        int yc = round(y);
+        Draw4Points(hdc, xs, ys, xc, yc, c);
+        y++;
+        x = sqrt((1 - (y * y) / (b * b)) * (a * a));
     }
 }
 
-void MidPointEllipse( HDC hdc, int xs , int ys , int a , int b , COLORREF c ){
-    int x = 0 , y = b ;
-    int asquare = a*a , bsquare = b*b ;
-    int dinit = bsquare - b*asquare + asquare/4 ;
-    while ( 2*bsquare*x < 2*asquare*y ){
-        Draw4Points(hdc,xs,ys,x,y,c) ;
-        if ( dinit <= 0 ){
-            dinit += ( 2*x + 1 )*bsquare ;
-        }else{
-            dinit += ( 2*x + 1 )*bsquare + ( -2*y + 1 )*asquare ;
-            y-- ;
+void PolarEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c)
+{
+    double x = a, y = 0;
+    double theta = 0, dtheta = 1.0 / max(a, b);
+    double dcos = cos(dtheta), dsin = sin(dtheta);
+    while (theta < PI / 2)
+    {
+        Draw4Points(hdc, xs, ys, round(x), round(y), c);
+        x = x * dcos - a * y / b * dsin;
+        y = y * dcos + x * b / a * dsin;
+        theta += dtheta;
+    }
+}
+
+void MidPointEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c)
+{
+    int x = 0, y = b;
+    int asquare = a * a, bsquare = b * b;
+    int dinit = bsquare - b * asquare + asquare / 4;
+    while (2 * bsquare * x < 2 * asquare * y)
+    {
+        Draw4Points(hdc, xs, ys, x, y, c);
+        if (dinit <= 0)
+        {
+            dinit += (2 * x + 1) * bsquare;
         }
-        x++ ;
-    }
-    dinit = ( x*x + x )*bsquare + bsquare/4 + ( y*y -2*y + 1 )*asquare - asquare*bsquare ;
-    while ( y > 0 ){
-        Draw4Points(hdc,xs,ys,x,y,c) ;
-        y-- ;
-        if ( dinit <= 0 ){
-            x++ ;
-            dinit += ( 2*x )*bsquare + ( -2*y + 1 )*asquare ;
-        }else{
-            dinit +=  ( -2*y + 1 )*asquare ;
+        else
+        {
+            dinit += (2 * x + 1) * bsquare + (-2 * y + 1) * asquare;
+            y--;
         }
-
+        x++;
+    }
+    dinit = (x * x + x) * bsquare + bsquare / 4 + (y * y - 2 * y + 1) * asquare - asquare * bsquare;
+    while (y > 0)
+    {
+        Draw4Points(hdc, xs, ys, x, y, c);
+        y--;
+        if (dinit <= 0)
+        {
+            x++;
+            dinit += (2 * x) * bsquare + (-2 * y + 1) * asquare;
+        }
+        else
+        {
+            dinit += (-2 * y + 1) * asquare;
+        }
     }
 }
 
-void DrawEllipse( HDC hdc, int xs , int ys , int a , int b , COLORREF c , int choice ){
-    if ( choice == 0 ){
-        printf("Direct Ellipse is drawn\n\n") ;
-        DirectEllipse(hdc,xs,ys,a,b,c) ;
-    }else if ( choice == 1 ){
-        printf("Polar Ellipse is drawn\n\n") ;
-        PolarEllipse(hdc,xs,ys,a,b,c) ;
-    }else{
-        printf("Midpoint Ellipse is drawn\n\n") ;
-        MidPointEllipse(hdc,xs,ys,a,b,c) ;
+void DrawEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c, int choice)
+{
+    if (choice == 0)
+    {
+        printf("Direct Ellipse is drawn\n\n");
+        DirectEllipse(hdc, xs, ys, a, b, c);
+    }
+    else if (choice == 1)
+    {
+        printf("Polar Ellipse is drawn\n\n");
+        PolarEllipse(hdc, xs, ys, a, b, c);
+    }
+    else
+    {
+        printf("Midpoint Ellipse is drawn\n\n");
+        MidPointEllipse(hdc, xs, ys, a, b, c);
     }
 }
 

@@ -1,53 +1,52 @@
 #ifndef CIRCLE_H_INCLUDED
 #define CIRCLE_H_INCLUDED
 
-#include<cmath>
-#include<algorithm>
+#include <cmath>
+#include <algorithm>
 
-using namespace std ;
+using namespace std;
 
-const double PI = 3.14159265359 ;
+const double PI = 3.14159265359;
 
-
-void DrawQuarterPoints( HDC hdc, int xs, int ys, int x, int y , COLORREF c , int quarter ){
-    switch ( quarter )
+void DrawQuarterPoints(HDC hdc, int xs, int ys, int x, int y, COLORREF c, int quarter)
+{
+    switch (quarter)
     {
     case 1:
-        SetPixel( hdc, xs + x, ys - y, c) ;
-        swap(x,y) ;
-        SetPixel( hdc, xs + x, ys - y, c) ;
+        SetPixel(hdc, xs + x, ys - y, c);
+        swap(x, y);
+        SetPixel(hdc, xs + x, ys - y, c);
         break;
     case 2:
-        SetPixel(hdc, xs + x, ys + y,c) ;
-        swap(x,y) ;
-        SetPixel(hdc, xs + x, ys + y,c) ;
+        SetPixel(hdc, xs + x, ys + y, c);
+        swap(x, y);
+        SetPixel(hdc, xs + x, ys + y, c);
         break;
     case 3:
-        SetPixel( hdc, xs - x, ys + y, c) ;
-        swap(x,y);
-        SetPixel( hdc, xs - x, ys + y, c) ;
+        SetPixel(hdc, xs - x, ys + y, c);
+        swap(x, y);
+        SetPixel(hdc, xs - x, ys + y, c);
         break;
     case 4:
-        SetPixel( hdc, xs - x, ys - y, c) ;
-        swap(x,y) ;
-        SetPixel( hdc, xs - x, ys - y, c) ;
+        SetPixel(hdc, xs - x, ys - y, c);
+        swap(x, y);
+        SetPixel(hdc, xs - x, ys - y, c);
         break;
     default:
         break;
     }
 }
 
-
-void Draw8Points( HDC hdc, int xs, int ys, int x, int y, COLORREF c )
+void Draw8Points(HDC hdc, int xs, int ys, int x, int y, COLORREF c)
 {
-    int dx[] = {1,1,-1,-1}, dy[] = {-1,1,-1,1} ;
-    for ( int i = 0 ; i < 2 ; i++ )
+    int dx[] = {1, 1, -1, -1}, dy[] = {-1, 1, -1, 1};
+    for (int i = 0; i < 2; i++)
     {
-        for ( int j = 0 ; j < 4 ; j++ )
+        for (int j = 0; j < 4; j++)
         {
-            SetPixel(hdc,xs+ dx[j]*x, ys + dy[j]*y,c) ;
+            SetPixel(hdc, xs + dx[j] * x, ys + dy[j] * y, c);
         }
-        std::swap(x,y) ;
+        std::swap(x, y);
     }
 }
 
@@ -62,13 +61,12 @@ void DirectCircle(HDC hdc, int xs, int ys, int R, COLORREF c)
         y = sqrt(R * R - x * x);
         Draw8Points(hdc, xs, ys, x, y, c);
     }
-
 }
 
 void PolarCircle(HDC hdc, int xs, int ys, int R, COLORREF c)
 {
-    double dtheta  = 1.0/R;
-    for( double theta=0; theta< PI/4; theta+=dtheta)
+    double dtheta = 1.0 / R;
+    for (double theta = 0; theta < PI / 4; theta += dtheta)
     {
         double x = R * cos(theta);
         double y = R * sin(theta);
@@ -78,103 +76,103 @@ void PolarCircle(HDC hdc, int xs, int ys, int R, COLORREF c)
 
 void IterativePolarCircle(HDC hdc, int xs, int ys, int R, COLORREF c)
 {
-    double dtheta = 1.0/R;
-    double st=sin(dtheta);
-    double ct=cos(dtheta);
-    double x = R, y=0;
+    double dtheta = 1.0 / R;
+    double st = sin(dtheta);
+    double ct = cos(dtheta);
+    double x = R, y = 0;
     Draw8Points(hdc, xs, ys, x, y, c);
-    while(x>y)
+    while (x > y)
     {
         double X = x * ct - y * st;
         y = x * st + y * ct;
         x = X;
-        Draw8Points(hdc,xs,ys,round(x), round(y), c);
+        Draw8Points(hdc, xs, ys, round(x), round(y), c);
     }
 }
 
-void MidPointCircle( HDC hdc, int xs, int ys, int r , COLORREF c , int quarter )
+void MidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c, int quarter)
 {
-    int dinit = 1 - r ;
-    int x = 0, y = r ;
-    while( y > x )
+    int dinit = 1 - r;
+    int x = 0, y = r;
+    while (y > x)
     {
-        if ( quarter != -1 )
+        if (quarter != -1)
         {
-            DrawQuarterPoints(hdc,xs,ys,x,y,c,quarter) ;
+            DrawQuarterPoints(hdc, xs, ys, x, y, c, quarter);
         }
         else
         {
-            Draw8Points(hdc,xs,ys,x,y,c) ;
+            Draw8Points(hdc, xs, ys, x, y, c);
         }
-        if ( dinit <= 0 )
+        if (dinit <= 0)
         {
-            dinit += 2*x + 3 ;
+            dinit += 2 * x + 3;
         }
         else
         {
-            dinit += 2*(x-y) + 5 ;
-            y-- ;
+            dinit += 2 * (x - y) + 5;
+            y--;
         }
-        x++ ;
+        x++;
     }
 }
 
-void ModifiedMidPointCircle( HDC hdc, int xs, int ys, int r, COLORREF c )
+void ModifiedMidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c)
 {
-    int dinit = 1 - r ;
-    int x = 0, y = r ;
-    int d1 = 3, d2 = 5 - 2*r ;
-    while( y > x )
+    int dinit = 1 - r;
+    int x = 0, y = r;
+    int d1 = 3, d2 = 5 - 2 * r;
+    while (y > x)
     {
-        Draw8Points(hdc,xs,ys,x,y,c) ;
-        if ( dinit <= 0 )
+        Draw8Points(hdc, xs, ys, x, y, c);
+        if (dinit <= 0)
         {
-            dinit += d1 ;
-            d2 += 2 ;
+            dinit += d1;
+            d2 += 2;
         }
         else
         {
-            dinit += d2 ;
-            d2 += 4 ;
-            y-- ;
+            dinit += d2;
+            d2 += 4;
+            y--;
         }
-        x++ ;
-        d1 += 2 ;
+        x++;
+        d1 += 2;
     }
 }
 
-void DrawQuaterCircle( HDC hdc, int xs, int ys, int R, COLORREF c , int quarter ){
-    MidPointCircle(hdc,xs,ys,R,c,quarter) ;
-}
-
-void DrawCircle( HDC hdc, int xs, int ys, int R, COLORREF c, int choice )
+void DrawQuaterCircle(HDC hdc, int xs, int ys, int R, COLORREF c, int quarter)
 {
-    if ( choice == 0 )
+    MidPointCircle(hdc, xs, ys, R, c, quarter);
+}
+
+void DrawCircle(HDC hdc, int xs, int ys, int R, COLORREF c, int choice)
+{
+    if (choice == 0)
     {
-        printf("Direct Circle is drawn\n\n") ;
-        DirectCircle(hdc,xs,ys,R,c) ;
+        printf("Direct Circle is drawn\n\n");
+        DirectCircle(hdc, xs, ys, R, c);
     }
-    else if ( choice == 1 )
+    else if (choice == 1)
     {
-        printf("Polar Circle is drawn\n\n") ;
-        PolarCircle(hdc,xs,ys,R,c) ;
+        printf("Polar Circle is drawn\n\n");
+        PolarCircle(hdc, xs, ys, R, c);
     }
-    else if ( choice == 2 )
+    else if (choice == 2)
     {
-        printf("Iterative Polar Circle is drawn\n\n") ;
-        IterativePolarCircle(hdc,xs,ys,R,c) ;
+        printf("Iterative Polar Circle is drawn\n\n");
+        IterativePolarCircle(hdc, xs, ys, R, c);
     }
-    else if ( choice == 3 )
+    else if (choice == 3)
     {
-        printf("Midpoint Circle is drawn\n\n") ;
-        MidPointCircle(hdc,xs,ys,R,c,-1) ;
+        printf("Midpoint Circle is drawn\n\n");
+        MidPointCircle(hdc, xs, ys, R, c, -1);
     }
     else
     {
-        printf("Modified Midpoint Circle is drawn\n\n") ;
-        ModifiedMidPointCircle(hdc,xs,ys,R,c) ;
+        printf("Modified Midpoint Circle is drawn\n\n");
+        ModifiedMidPointCircle(hdc, xs, ys, R, c);
     }
 }
-
 
 #endif // CIRCLE_H_INCLUDED

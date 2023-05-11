@@ -1,15 +1,16 @@
 # depslib dependency file v1.0
-1683761467 source:e:\programming\graphics\graphicsproject\main.cpp
+1683778475 source:e:\programming\graphics\graphicsproject\main.cpp
 	<tchar.h>
 	<windows.h>
 	<string>
+	<vector>
 	"csgraphics.h"
 
 1683761062 e:\programming\graphics\graphicsproject\circle.h
 	<cmath>
 	<algorithm>
 
-1683761062 e:\programming\graphics\graphicsproject\line.h
+1683778123 e:\programming\graphics\graphicsproject\line.h
 	<cmath>
 	<algorithm>
 
@@ -22,16 +23,28 @@
 	"line.h"
 	<stack>
 
-1683757130 e:\programming\graphics\graphicsproject\curve.h
+1683778129 e:\programming\graphics\graphicsproject\curve.h
 
-1683741137 e:\programming\graphics\graphicsproject\csgraphics.h
+1683778143 e:\programming\graphics\graphicsproject\csgraphics.h
 	"circle.h"
 	"line.h"
 	"rectangle.h"
 	"fill.h"
 	"ellipse.h"
+	"convex.h"
+	"general.h"
 
 1683761062 e:\programming\graphics\graphicsproject\ellipse.h
 	<cmath>
 	<algorithm>
+
+1683778378 e:\programming\graphics\graphicsproject\convex.h
+	<vector>
+	"line.h"
+	"curve.h"
+
+1683778512 e:\programming\graphics\graphicsproject\general.h
+	<algorithm>
+	<vector>
+	"curve.h"
 
