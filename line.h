@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <algorithm>
+#include "curve.h"
+#include "circle.h"
 
 using namespace std;
 
@@ -208,6 +210,20 @@ void QuarterLine(HDC hdc, int xs, int ys, int x, int y, COLORREF c, int quarter)
     default:
         break;
     }
+}
+
+Point PointInside( int xc1 , int yc1 , int r1 , int xc2 , int yc2 , int r2 ){
+    int dx = xc2 - xc1;
+    int dy = yc2 - yc1;
+    for (double t = 0; t <= 1; t += 0.0001)
+    {
+        int x = xc1 + dx * t;
+        int y = yc1 + dy * t;
+        int inside = InsideCircle(x,y,xc1,yc1,r1) + InsideCircle(x,y,xc2,yc2,r2) ;
+        if ( inside == 2 )
+            return Point(x,y) ;
+    }
+    return Point(-1,-1) ;
 }
 
 void DrawLine(HDC hdc, int xs, int ys, int xe, int ye, COLORREF c, int choice)

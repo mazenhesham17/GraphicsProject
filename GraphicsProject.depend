@@ -1,29 +1,31 @@
 # depslib dependency file v1.0
-1683778475 source:e:\programming\graphics\graphicsproject\main.cpp
+1683941379 source:e:\programming\graphics\graphicsproject\main.cpp
 	<tchar.h>
 	<windows.h>
 	<string>
 	<vector>
 	"csgraphics.h"
 
-1683761062 e:\programming\graphics\graphicsproject\circle.h
+1683940453 e:\programming\graphics\graphicsproject\circle.h
 	<cmath>
 	<algorithm>
 
-1683778123 e:\programming\graphics\graphicsproject\line.h
+1683941212 e:\programming\graphics\graphicsproject\line.h
 	<cmath>
 	<algorithm>
+	"curve.h"
+	"circle.h"
 
-1683739763 e:\programming\graphics\graphicsproject\rectangle.h
+1683778680 e:\programming\graphics\graphicsproject\rectangle.h
 	"line.h"
 
-1683760950 e:\programming\graphics\graphicsproject\fill.h
+1683778659 e:\programming\graphics\graphicsproject\fill.h
 	"circle.h"
 	"curve.h"
 	"line.h"
 	<stack>
 
-1683778129 e:\programming\graphics\graphicsproject\curve.h
+1683778644 e:\programming\graphics\graphicsproject\curve.h
 
 1683778143 e:\programming\graphics\graphicsproject\csgraphics.h
 	"circle.h"
@@ -34,16 +36,16 @@
 	"convex.h"
 	"general.h"
 
-1683761062 e:\programming\graphics\graphicsproject\ellipse.h
+1683778654 e:\programming\graphics\graphicsproject\ellipse.h
 	<cmath>
 	<algorithm>
 
-1683778378 e:\programming\graphics\graphicsproject\convex.h
+1683778636 e:\programming\graphics\graphicsproject\convex.h
 	<vector>
 	"line.h"
 	"curve.h"
 
-1683778512 e:\programming\graphics\graphicsproject\general.h
+1683934456 e:\programming\graphics\graphicsproject\general.h
 	<algorithm>
 	<vector>
 	"curve.h"

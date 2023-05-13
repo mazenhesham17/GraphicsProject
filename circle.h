@@ -141,6 +141,28 @@ void ModifiedMidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c)
     }
 }
 
+int DrawSpecialCircle(HDC hdc, int xs, int ys, int xe, int ye, COLORREF c)
+{
+    int r = sqrt( ( xe - xs )*( xe - xs ) + ( ye - ys )*( ye - ys ) ) ;
+    ModifiedMidPointCircle( hdc,xs,ys,r,c ) ;
+    return r ;
+}
+
+bool InsideCircle( int x , int y , int xs , int ys , int r ){
+    return ( (x - xs)*(x - xs) + (y - ys)*(y - ys) - r*r < 0 ) ;
+}
+
+int Intersection( int xc1 , int yc1 , int r1 , int xc2 , int yc2 , int r2  ){
+    int r1r2 = sqrt( ( xc2 - xc1 )*( xc2 - xc1 ) + ( yc2 - yc1  )*( yc2 - yc1 )  ) ;
+    if ( r1 + r2 < r1r2 ){
+        return -1 ;
+    }else if ( r1 + r2 == r1r2 ){
+        return 0 ;
+    }else{
+        return 1 ;
+    }
+}
+
 void DrawQuaterCircle(HDC hdc, int xs, int ys, int R, COLORREF c, int quarter)
 {
     MidPointCircle(hdc, xs, ys, R, c, quarter);

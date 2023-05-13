@@ -14,25 +14,26 @@ using namespace std;
 
 vector<Point> points;
 string titles[] =
-    {
-        "Change the background",
-        "Change the mouse shape",
-        "Change the drawing color",
-        "Clear Screen",
-        "Save Screen",
-        "Load Screen",
-        "Draw Line",
-        "Draw Circle",
-        "Draw Ellipse",
-        "Fill Circle with Lines",
-        "Fill Circle with Circles",
-        "Fill Square with Hermit Curve",
-        "Fill rectangle with Bezier Curve",
-        "Polygon Filling",
-        "Flood Fill",
-        "Cardinal Spline Curve",
-        "Clipping using Rectangle",
-        "Clipping using Square",
+{
+    "Change the background",
+    "Change the mouse shape",
+    "Change the drawing color",
+    "Clear Screen",
+    "Save Screen",
+    "Load Screen",
+    "Draw Line",
+    "Draw Circle",
+    "Draw Ellipse",
+    "Fill Circle with Lines",
+    "Fill Circle with Circles",
+    "Fill Square with Hermit Curve",
+    "Fill rectangle with Bezier Curve",
+    "Polygon Filling",
+    "Flood Fill",
+    "Cardinal Spline Curve",
+    "Clipping using Rectangle",
+    "Clipping using Square",
+    "Intersection of Two Circles"
 };
 
 /*  Declare Windows procedure  */
@@ -73,33 +74,33 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
     /* The class is registered, let's create the program*/
     hwnd = CreateWindowEx(
-        0,                   /* Extended possibilites for variation */
-        szClassName,         /* Classname */
-        _T("Graphics"),      /* Title Text */
-        WS_OVERLAPPEDWINDOW, /* default window */
-        CW_USEDEFAULT,       /* Windows decides the position */
-        CW_USEDEFAULT,       /* where the window ends up on the screen */
-        700,                 /* The programs width */
-        450,                 /* and height in pixels */
-        HWND_DESKTOP,        /* The window is a child-window to desktop */
-        NULL,                /* No menu */
-        hThisInstance,       /* Program Instance handler */
-        NULL                 /* No Window Creation data */
-    );
+               0,                   /* Extended possibilites for variation */
+               szClassName,         /* Classname */
+               _T("Graphics"),      /* Title Text */
+               WS_OVERLAPPEDWINDOW, /* default window */
+               CW_USEDEFAULT,       /* Windows decides the position */
+               CW_USEDEFAULT,       /* where the window ends up on the screen */
+               700,                 /* The programs width */
+               450,                 /* and height in pixels */
+               HWND_DESKTOP,        /* The window is a child-window to desktop */
+               NULL,                /* No menu */
+               hThisInstance,       /* Program Instance handler */
+               NULL                 /* No Window Creation data */
+           );
 
     hwndCombo = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        "ComboBox",
-        "",
-        WS_CHILD | WS_VISIBLE | CBS_DROPDOWN,
-        10,
-        10,
-        220,
-        450,
-        hwnd,
-        NULL,
-        hThisInstance,
-        NULL);
+                    WS_EX_CLIENTEDGE,
+                    "ComboBox",
+                    "",
+                    WS_CHILD | WS_VISIBLE | CBS_DROPDOWN,
+                    10,
+                    10,
+                    220,
+                    450,
+                    hwnd,
+                    NULL,
+                    hThisInstance,
+                    NULL);
 
     /* Add items to the combo box */
     for (int i = 0; i < 19; i++)
@@ -123,31 +124,22 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
     return messages.wParam;
 }
 
-int fixColor(int x)
-{
-    if (x < 0)
-    {
-        x = 0;
-    }
-    else if (x > 255)
-    {
-        x = 255;
-    }
-    return x;
-}
-
 /*  This function is called by the Windows function DispatchMessage()  */
 
 LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static int idx = -1, choice = -1;
-    static int xs = -1, ys = -1, xe = -1, ye = -1;
-    static int r = -1, g = -1, b = -1;
-
     HDC hdc;
     HWND hconsole = GetConsoleWindow();
+    CHOOSECOLOR cc ;
     COLORREF WHITE = RGB(255, 255, 255);
     static COLORREF bordercolor = RGB(255, 0, 0), fillcolor = RGB(0, 0, 255);
+    static int idx = -1, choice = -1;
+    static int xs = -1, ys = -1, xe = -1, ye = -1;
+    // special task variables
+    static int x1 = -1, y1 = -1, x2 = -1, y2 = -1 ;
+    static int xc1 = -1, yc1 = -1, r1 = -1 ;
+    static int xc2 = -1, yc2 = -1, r2 = -1 ;
+    static Point temp ;
     switch (message) /* handle the messages */
     {
     case WM_COMMAND:
@@ -173,19 +165,27 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 printf("2.Fill Color\n");
                 printf("Choose the color to change : ");
                 scanf("%d", &choice);
-                printf("Enter the new color in (R,G,B) : ");
-                scanf("%d %d %d", &r, &g, &b);
-                r = fixColor(r), g = fixColor(g), b = fixColor(b);
-                if (choice == 1)
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                cc.lStructSize = sizeof(CHOOSECOLOR);
+                cc.hwndOwner = hwnd;
+                cc.Flags = CC_FULLOPEN | CC_RGBINIT ;
+                cc.lpCustColors = &WHITE ;
+                if ( choice == 1 )
                 {
-                    bordercolor = RGB(r, g, b);
+                    cc.rgbResult = bordercolor ;
+                    if ( ChooseColor(&cc) )
+                    {
+                        bordercolor = cc.rgbResult ;
+                    }
                 }
                 else
                 {
-                    fillcolor = RGB(r, g, b);
+                    cc.rgbResult = fillcolor ;
+                    if ( ChooseColor(&cc) )
+                    {
+                        fillcolor = cc.rgbResult ;
+                    }
                 }
-                printf("\n");
-                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
                 SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
             }
             else if (idx == 3)
@@ -337,6 +337,23 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             ys = HIWORD(lParam);
             DrawCircle(hdc, xs, ys, 40, bordercolor, 3);
         }
+        else if ( idx == 18 )
+        {
+            if ( x1 == -1 )
+            {
+                x1 = LOWORD(lParam);
+                y1 = HIWORD(lParam);
+            }
+            else
+            {
+                hdc = GetDC(hwnd);
+                x2 = LOWORD(lParam);
+                y2 = HIWORD(lParam);
+                r1 = DrawSpecialCircle(hdc,x1,y1,x2,y2,bordercolor) ;
+                xc1 = x1, yc1 = y1 ;
+                x1 = y1 = x2 = y2 = -1 ;
+            }
+        }
         break;
     case WM_RBUTTONDBLCLK:
         if (idx == 6)
@@ -379,6 +396,50 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             else
             {
                 IterativeFloodFill(hdc, xe, ye, fillcolor, bordercolor);
+            }
+        }
+        else if ( idx == 18 )
+        {
+            if ( x1 == -1 )
+            {
+                x1 = LOWORD(lParam);
+                y1 = HIWORD(lParam);
+            }
+            else
+            {
+                hdc = GetDC(hwnd);
+                x2 = LOWORD(lParam);
+                y2 = HIWORD(lParam);
+                r2 = DrawSpecialCircle(hdc,x1,y1,x2,y2,bordercolor) ;
+                xc2 = x1, yc2 = y1 ;
+                if ( xc1 != -1  )
+                {
+                    int state = Intersection(xc1,yc1,r1,xc2,yc2,r2) ;
+                    if ( state == -1 )
+                    {
+                        // There is no intersection
+                        MessageBox(hwnd,"The two circles are not intersecting.",NULL,MB_OK) ;
+                    }
+                    else if ( state == 0 )
+                    {
+                        // Two circle is touching
+                        MessageBox(hwnd,"The two circles are touching.",NULL,MB_OK) ;
+                    }
+                    else
+                    {
+                        /*
+                        temp = PointInside(xc1,yc1,r1,xc2,yc2,r2) ;
+                        if ( temp.x != -1 ){
+                            xs = temp.x , ys = temp.y ;
+                            IterativeFloodFill(hdc,xs,ys,fillcolor,bordercolor) ;
+                        }
+                        */
+                        xs = (xc1+xc2)/2 , ys = (yc1+yc2)/2 ;
+                        IterativeFloodFill(hdc,xs,ys,fillcolor,bordercolor) ;
+                    }
+                    xc1 = yc1 = xc2 = yc2 = -1 ;
+                }
+                x1 = y1 = x2 = y2 = -1 ;
             }
         }
         break;

@@ -50,7 +50,6 @@ void BuildTable(vector<Point> &polygon, vector<EdgeList> &table)
 }
 void FillGeneralPolygon(HDC hdc, vector<Point> &polygon, COLORREF c)
 {
-    int n = polygon.size();
     vector<EdgeList> table(MAX);
     BuildTable(polygon, table);
     int y = 0;
