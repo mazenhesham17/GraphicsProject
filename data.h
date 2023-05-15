@@ -169,8 +169,33 @@ void Load(HDC hdc, vector<Data> &screen)
             DrawCardinalSpline(hdc, temp, cur.t, cur.bc);
             break;
         case 16:
+            if (cur.c != -1)
+            {
+                temp = cur.v;
+                if (temp.size() == 2)
+                {
+                    // line clipping
+                    DrawLine(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc, cur.c);
+                }
+                else
+                {
+                    // polygon clipping
+                }
+            }
+            else
+            {
+                DrawRectangle(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc);
+            }
             break;
         case 17:
+            if (cur.c != -1)
+            {
+                MidPointLine(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc);
+            }
+            else
+            {
+                DrawRectangle(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc);
+            }
             break;
         case 18:
             if (cur.c != -1)

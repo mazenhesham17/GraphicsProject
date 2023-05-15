@@ -136,6 +136,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
     static COLORREF bordercolor = RGB(255, 0, 0), fillcolor = RGB(0, 0, 255);
     static int idx = -1, choice = -1;
     static int xs = -1, ys = -1, xe = -1, ye = -1;
+    static int xleft = -1, ytop = -1, xright = -1, ybottom = -1;
     // special task variables
     static int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
     static int xc1 = -1, yc1 = -1, r1 = -1;
@@ -290,6 +291,17 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
                 SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
             }
+            else if (idx == 16)
+            {
+                SetWindowPos(hconsole, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                printf("1. Polygon Clipping\n");
+                printf("2. Line Clipping\n");
+                printf("Choose algorithm : ");
+                scanf("%d", &choice);
+                printf("\n");
+                SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            }
         }
         break;
     case WM_LBUTTONDBLCLK:
@@ -365,6 +377,33 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             ys = HIWORD(lParam);
             points.push_back(Point(xs, ys));
         }
+        else if (idx == 16)
+        {
+            if (x1 == -1)
+            {
+                x1 = LOWORD(lParam);
+                y1 = HIWORD(lParam);
+            }
+            else
+            {
+                hdc = GetDC(hwnd);
+                x2 = LOWORD(lParam);
+                y2 = HIWORD(lParam);
+                DrawRectangle(hdc, x1, y1, x2, y2, bordercolor);
+                screen.push_back(Data(idx, x1, y1, x2, y2, fillcolor, bordercolor, -1));
+                xleft = x1, ytop = y1, xright = x2, ybottom = y2;
+                x1 = y1 = x2 = y2 = -1;
+            }
+        }
+        else if (idx == 17)
+        {
+            hdc = GetDC(hwnd);
+            xs = LOWORD(lParam);
+            ys = HIWORD(lParam);
+            DrawSquare(hdc, xs, ys, xe, ye, 150, bordercolor);
+            screen.push_back(Data(idx, xs, ys, xe, ye, fillcolor, bordercolor, -1));
+            xleft = xs, ytop = ys, xright = xe, ybottom = ye;
+        }
         else if (idx == 18)
         {
             if (x1 == -1)
@@ -438,6 +477,53 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             hdc = GetDC(hwnd);
             screen.push_back(Data(idx, points, fillcolor, bordercolor, choice, 0.2));
             DrawCardinalSpline(hdc, points, 0.2, bordercolor);
+        }
+        else if (idx == 16)
+        {
+            if (choice == 1)
+            {
+                // Polygon to be
+            }
+            else
+            {
+                if (x1 == -1)
+                {
+                    x1 = LOWORD(lParam);
+                    y1 = HIWORD(lParam);
+                }
+                else
+                {
+                    hdc = GetDC(hwnd);
+                    x2 = LOWORD(lParam);
+                    y2 = HIWORD(lParam);
+                    if (CohenClipping(x1, y1, x2, y2, xleft, ytop, xright, ybottom))
+                    {
+                        DrawLine(hdc, x1, y1, x2, y2, fillcolor, 2);
+                        screen.push_back(Data(idx, x1, y1, x2, y2, bordercolor, fillcolor, 2));
+                    }
+                    x1 = y1 = x2 = y2 = -1;
+                }
+            }
+        }
+        else if (idx == 17)
+        {
+            if (x1 == -1)
+            {
+                x1 = LOWORD(lParam);
+                y1 = HIWORD(lParam);
+            }
+            else
+            {
+                hdc = GetDC(hwnd);
+                x2 = LOWORD(lParam);
+                y2 = HIWORD(lParam);
+                if (CohenClipping(x1, y1, x2, y2, xleft, ytop, xright, ybottom))
+                {
+                    DrawLine(hdc, x1, y1, x2, y2, fillcolor, 2);
+                    screen.push_back(Data(idx, x1, y1, x2, y2, bordercolor, fillcolor, 2));
+                }
+                x1 = y1 = x2 = y2 = -1;
+            }
         }
         else if (idx == 18)
         {
