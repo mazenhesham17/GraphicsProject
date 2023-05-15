@@ -13,28 +13,29 @@
 using namespace std;
 
 vector<Point> points;
+vector<Data> screen;
+
 string titles[] =
-{
-    "Change the background",
-    "Change the mouse shape",
-    "Change the drawing color",
-    "Clear Screen",
-    "Save Screen",
-    "Load Screen",
-    "Draw Line",
-    "Draw Circle",
-    "Draw Ellipse",
-    "Fill Circle with Lines",
-    "Fill Circle with Circles",
-    "Fill Square with Hermit Curve",
-    "Fill rectangle with Bezier Curve",
-    "Polygon Filling",
-    "Flood Fill",
-    "Cardinal Spline Curve",
-    "Clipping using Rectangle",
-    "Clipping using Square",
-    "Intersection of Two Circles"
-};
+    {
+        "Change the background",
+        "Change the mouse shape",
+        "Change the drawing color",
+        "Clear Screen",
+        "Save Screen",
+        "Load Screen",
+        "Draw Line",
+        "Draw Circle",
+        "Draw Ellipse",
+        "Fill Circle with Lines",
+        "Fill Circle with Circles",
+        "Fill Square with Hermit Curve",
+        "Fill rectangle with Bezier Curve",
+        "Polygon Filling",
+        "Flood Fill",
+        "Cardinal Spline Curve",
+        "Clipping using Rectangle",
+        "Clipping using Square",
+        "Intersection of Two Circles"};
 
 /*  Declare Windows procedure  */
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
@@ -74,33 +75,33 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
     /* The class is registered, let's create the program*/
     hwnd = CreateWindowEx(
-               0,                   /* Extended possibilites for variation */
-               szClassName,         /* Classname */
-               _T("Graphics"),      /* Title Text */
-               WS_OVERLAPPEDWINDOW, /* default window */
-               CW_USEDEFAULT,       /* Windows decides the position */
-               CW_USEDEFAULT,       /* where the window ends up on the screen */
-               700,                 /* The programs width */
-               450,                 /* and height in pixels */
-               HWND_DESKTOP,        /* The window is a child-window to desktop */
-               NULL,                /* No menu */
-               hThisInstance,       /* Program Instance handler */
-               NULL                 /* No Window Creation data */
-           );
+        0,                   /* Extended possibilites for variation */
+        szClassName,         /* Classname */
+        _T("Graphics"),      /* Title Text */
+        WS_OVERLAPPEDWINDOW, /* default window */
+        CW_USEDEFAULT,       /* Windows decides the position */
+        CW_USEDEFAULT,       /* where the window ends up on the screen */
+        700,                 /* The programs width */
+        450,                 /* and height in pixels */
+        HWND_DESKTOP,        /* The window is a child-window to desktop */
+        NULL,                /* No menu */
+        hThisInstance,       /* Program Instance handler */
+        NULL                 /* No Window Creation data */
+    );
 
     hwndCombo = CreateWindowEx(
-                    WS_EX_CLIENTEDGE,
-                    "ComboBox",
-                    "",
-                    WS_CHILD | WS_VISIBLE | CBS_DROPDOWN,
-                    10,
-                    10,
-                    220,
-                    450,
-                    hwnd,
-                    NULL,
-                    hThisInstance,
-                    NULL);
+        WS_EX_CLIENTEDGE,
+        "ComboBox",
+        "",
+        WS_CHILD | WS_VISIBLE | CBS_DROPDOWN,
+        10,
+        10,
+        220,
+        450,
+        hwnd,
+        NULL,
+        hThisInstance,
+        NULL);
 
     /* Add items to the combo box */
     for (int i = 0; i < 19; i++)
@@ -130,16 +131,16 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 {
     HDC hdc;
     HWND hconsole = GetConsoleWindow();
-    CHOOSECOLOR cc ;
+    CHOOSECOLOR cc;
     COLORREF WHITE = RGB(255, 255, 255);
     static COLORREF bordercolor = RGB(255, 0, 0), fillcolor = RGB(0, 0, 255);
     static int idx = -1, choice = -1;
     static int xs = -1, ys = -1, xe = -1, ye = -1;
     // special task variables
-    static int x1 = -1, y1 = -1, x2 = -1, y2 = -1 ;
-    static int xc1 = -1, yc1 = -1, r1 = -1 ;
-    static int xc2 = -1, yc2 = -1, r2 = -1 ;
-    static Point temp ;
+    static int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
+    static int xc1 = -1, yc1 = -1, r1 = -1;
+    static int xc2 = -1, yc2 = -1, r2 = -1;
+    static Point temp;
     switch (message) /* handle the messages */
     {
     case WM_COMMAND:
@@ -151,6 +152,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 // change the color of the background
                 SetClassLongPtrA(hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)CreateSolidBrush(WHITE));
                 InvalidateRect(hwnd, NULL, true);
+                screen.clear();
             }
             else if (idx == 1)
             {
@@ -168,22 +170,22 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
                 cc.lStructSize = sizeof(CHOOSECOLOR);
                 cc.hwndOwner = hwnd;
-                cc.Flags = CC_FULLOPEN | CC_RGBINIT ;
-                cc.lpCustColors = &WHITE ;
-                if ( choice == 1 )
+                cc.Flags = CC_FULLOPEN | CC_RGBINIT;
+                cc.lpCustColors = &WHITE;
+                if (choice == 1)
                 {
-                    cc.rgbResult = bordercolor ;
-                    if ( ChooseColor(&cc) )
+                    cc.rgbResult = bordercolor;
+                    if (ChooseColor(&cc))
                     {
-                        bordercolor = cc.rgbResult ;
+                        bordercolor = cc.rgbResult;
                     }
                 }
                 else
                 {
-                    cc.rgbResult = fillcolor ;
-                    if ( ChooseColor(&cc) )
+                    cc.rgbResult = fillcolor;
+                    if (ChooseColor(&cc))
                     {
-                        fillcolor = cc.rgbResult ;
+                        fillcolor = cc.rgbResult;
                     }
                 }
                 SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
@@ -191,7 +193,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             else if (idx == 3)
             {
                 // clear the screen
+                screen.clear();
                 InvalidateRect(hwnd, NULL, true);
+            }
+            else if (idx == 4)
+            {
+                // save the screen drawing to file called screen
+                Save(screen);
+            }
+            else if (idx == 5)
+            {
+                // load drawings from file called screen
+                // InvalidateRect(hwnd, NULL, true);
+                screen.clear();
+                hdc = GetDC(hwnd);
+                Load(hdc, screen);
             }
             else if (idx == 6)
             {
@@ -288,13 +304,15 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             xs = LOWORD(lParam);
             ys = HIWORD(lParam);
             DrawCircle(hdc, xs, ys, 80, bordercolor, choice - 1);
+            screen.push_back(Data(idx, xs, ys, fillcolor, bordercolor, choice - 1));
         }
         else if (idx == 8)
         {
             hdc = GetDC(hwnd);
             xs = LOWORD(lParam);
             ys = HIWORD(lParam);
-            DrawEllipse(hdc, xs, ys, 70, 140, bordercolor, choice - 1);
+            DrawEllipse(hdc, xs, ys, 60, 120, bordercolor, choice - 1);
+            screen.push_back(Data(idx, xs, ys, fillcolor, bordercolor, choice - 1));
         }
         else if (idx == 9 || idx == 10)
         {
@@ -310,6 +328,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             {
                 FillWithCircles(hdc, xs, ys, 80, fillcolor, choice);
             }
+            screen.push_back(Data(idx, xs, ys, fillcolor, bordercolor, choice));
         }
         else if (idx == 11)
         {
@@ -318,6 +337,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             ys = HIWORD(lParam);
             DrawSquare(hdc, xs, ys, xe, ye, 250, bordercolor);
             FillWithHermite(hdc, xs, ys, xe, ye, fillcolor);
+            screen.push_back(Data(idx, xs, ys, xe, ye, fillcolor, bordercolor, -1));
         }
         else if (idx == 12)
         {
@@ -335,11 +355,19 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             hdc = GetDC(hwnd);
             xs = LOWORD(lParam);
             ys = HIWORD(lParam);
-            DrawCircle(hdc, xs, ys, 40, bordercolor, 3);
+            DrawCircle(hdc, xs, ys, 40, bordercolor, 4);
+            screen.push_back(Data(idx, xs, ys, fillcolor, bordercolor, -1));
         }
-        else if ( idx == 18 )
+        else if (idx == 15)
         {
-            if ( x1 == -1 )
+            hdc = GetDC(hwnd);
+            xs = LOWORD(lParam);
+            ys = HIWORD(lParam);
+            points.push_back(Point(xs, ys));
+        }
+        else if (idx == 18)
+        {
+            if (x1 == -1)
             {
                 x1 = LOWORD(lParam);
                 y1 = HIWORD(lParam);
@@ -349,9 +377,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 hdc = GetDC(hwnd);
                 x2 = LOWORD(lParam);
                 y2 = HIWORD(lParam);
-                r1 = DrawSpecialCircle(hdc,x1,y1,x2,y2,bordercolor) ;
-                xc1 = x1, yc1 = y1 ;
-                x1 = y1 = x2 = y2 = -1 ;
+                r1 = DrawSpecialCircle(hdc, x1, y1, x2, y2, bordercolor);
+                xc1 = x1, yc1 = y1;
+                Data cur = Data(idx, xc1, yc1, fillcolor, bordercolor, 4);
+                cur.r = r1;
+                screen.push_back(cur);
+                x1 = y1 = x2 = y2 = -1;
             }
         }
         break;
@@ -362,6 +393,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             xe = LOWORD(lParam);
             ye = HIWORD(lParam);
             DrawLine(hdc, xs, ys, xe, ye, bordercolor, choice - 1);
+            screen.push_back(Data(idx, xs, ys, xe, ye, fillcolor, bordercolor, choice - 1));
         }
         else if (idx == 12)
         {
@@ -370,11 +402,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             ye = HIWORD(lParam);
             DrawRectangle(hdc, xs, ys, xe, ye, bordercolor);
             FillWithBezier(hdc, xs, ys, xe, ye, fillcolor);
+            screen.push_back(Data(idx, xs, ys, xe, ye, fillcolor, bordercolor, -1));
         }
         else if (idx == 13)
         {
             hdc = GetDC(hwnd);
             DrawPolygon(hdc, points, bordercolor);
+            screen.push_back(Data(idx, points, fillcolor, bordercolor, choice));
             if (choice == 1)
             {
                 FillConvexPolygon(hdc, points, fillcolor);
@@ -397,10 +431,17 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             {
                 IterativeFloodFill(hdc, xe, ye, fillcolor, bordercolor);
             }
+            screen.push_back(Data(idx, xe, ye, fillcolor, bordercolor, choice));
         }
-        else if ( idx == 18 )
+        else if (idx == 15)
         {
-            if ( x1 == -1 )
+            hdc = GetDC(hwnd);
+            screen.push_back(Data(idx, points, fillcolor, bordercolor, choice, 0.2));
+            DrawCardinalSpline(hdc, points, 0.2, bordercolor);
+        }
+        else if (idx == 18)
+        {
+            if (x1 == -1)
             {
                 x1 = LOWORD(lParam);
                 y1 = HIWORD(lParam);
@@ -410,36 +451,38 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 hdc = GetDC(hwnd);
                 x2 = LOWORD(lParam);
                 y2 = HIWORD(lParam);
-                r2 = DrawSpecialCircle(hdc,x1,y1,x2,y2,bordercolor) ;
-                xc2 = x1, yc2 = y1 ;
-                if ( xc1 != -1  )
+                r2 = DrawSpecialCircle(hdc, x1, y1, x2, y2, bordercolor);
+                xc2 = x1, yc2 = y1;
+                Data cur = Data(idx, xc2, yc2, fillcolor, bordercolor, 4);
+                cur.r = r2;
+                screen.push_back(cur);
+                if (xc1 != -1)
                 {
-                    int state = Intersection(xc1,yc1,r1,xc2,yc2,r2) ;
-                    if ( state == -1 )
+                    int state = Intersection(xc1, yc1, r1, xc2, yc2, r2);
+                    if (state == -1)
                     {
                         // There is no intersection
-                        MessageBox(hwnd,"The two circles are not intersecting.",NULL,MB_OK) ;
+                        MessageBox(hwnd, "The two circles are not intersecting.", NULL, MB_OK);
                     }
-                    else if ( state == 0 )
+                    else if (state == 0)
                     {
                         // Two circle is touching
-                        MessageBox(hwnd,"The two circles are touching.",NULL,MB_OK) ;
+                        MessageBox(hwnd, "The two circles are touching.", NULL, MB_OK);
                     }
                     else
                     {
-                        /*
-                        temp = PointInside(xc1,yc1,r1,xc2,yc2,r2) ;
-                        if ( temp.x != -1 ){
-                            xs = temp.x , ys = temp.y ;
-                            IterativeFloodFill(hdc,xs,ys,fillcolor,bordercolor) ;
+
+                        temp = PointInside(xc1, yc1, r1, xc2, yc2, r2);
+                        if (temp.x != -1)
+                        {
+                            xs = temp.x, ys = temp.y;
+                            IterativeFloodFill(hdc, xs, ys, fillcolor, bordercolor);
+                            screen.push_back(Data(idx, xs, ys, fillcolor, bordercolor, -1));
                         }
-                        */
-                        xs = (xc1+xc2)/2 , ys = (yc1+yc2)/2 ;
-                        IterativeFloodFill(hdc,xs,ys,fillcolor,bordercolor) ;
                     }
-                    xc1 = yc1 = xc2 = yc2 = -1 ;
+                    xc1 = yc1 = xc2 = yc2 = -1;
                 }
-                x1 = y1 = x2 = y2 = -1 ;
+                x1 = y1 = x2 = y2 = -1;
             }
         }
         break;

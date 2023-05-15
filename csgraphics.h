@@ -8,5 +8,7 @@
 #include "ellipse.h"
 #include "convex.h"
 #include "general.h"
+#include "data.h"
+#include "clipping.h"
 
 #endif // CSGRAPHICS_H_INCLUDED

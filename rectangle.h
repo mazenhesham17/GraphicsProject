@@ -2,13 +2,20 @@
 #define RECTANGLE_H_INCLUDED
 
 #include "line.h"
+#include <algorithm>
 
-void DrawRectangle(HDC hdc, int xleft, int ytop, int xright, int ybottom, COLORREF c)
+using namespace std;
+
+void DrawRectangle(HDC hdc, int &xleft, int &ytop, int &xright, int &ybottom, COLORREF c)
 {
-    DrawLine(hdc, xleft, ytop, xleft, ybottom, c, 4);
-    DrawLine(hdc, xright, ytop, xright, ybottom, c, 4);
-    DrawLine(hdc, xleft, ytop, xright, ytop, c, 4);
-    DrawLine(hdc, xleft, ybottom, xright, ybottom, c, 4);
+    if (xleft > xright)
+        swap(xleft, xright);
+    if (ytop < ybottom)
+        swap(ytop, ybottom);
+    DrawLine(hdc, xleft, ytop, xleft, ybottom, c, 2);
+    DrawLine(hdc, xright, ytop, xright, ybottom, c, 2);
+    DrawLine(hdc, xleft, ytop, xright, ytop, c, 2);
+    DrawLine(hdc, xleft, ybottom, xright, ybottom, c, 2);
 }
 
 void DrawSquare(HDC hdc, int &xleft, int &ytop, int &xright, int &ybottom, int l, COLORREF c)

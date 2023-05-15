@@ -94,7 +94,8 @@ void MidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c, int quarter)
 {
     int dinit = 1 - r;
     int x = 0, y = r;
-    while (y > x)
+    Draw8Points(hdc, xs, ys, x, y, c);
+    while (y >= x)
     {
         if (quarter != -1)
         {
@@ -122,7 +123,8 @@ void ModifiedMidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c)
     int dinit = 1 - r;
     int x = 0, y = r;
     int d1 = 3, d2 = 5 - 2 * r;
-    while (y > x)
+    Draw8Points(hdc, xs, ys, x, y, c);
+    while (y >= x)
     {
         Draw8Points(hdc, xs, ys, x, y, c);
         if (dinit <= 0)
@@ -143,23 +145,30 @@ void ModifiedMidPointCircle(HDC hdc, int xs, int ys, int r, COLORREF c)
 
 int DrawSpecialCircle(HDC hdc, int xs, int ys, int xe, int ye, COLORREF c)
 {
-    int r = sqrt( ( xe - xs )*( xe - xs ) + ( ye - ys )*( ye - ys ) ) ;
-    ModifiedMidPointCircle( hdc,xs,ys,r,c ) ;
-    return r ;
+    int r = sqrt((xe - xs) * (xe - xs) + (ye - ys) * (ye - ys));
+    ModifiedMidPointCircle(hdc, xs, ys, r, c);
+    return r;
 }
 
-bool InsideCircle( int x , int y , int xs , int ys , int r ){
-    return ( (x - xs)*(x - xs) + (y - ys)*(y - ys) - r*r < 0 ) ;
+bool InsideCircle(int x, int y, int xs, int ys, int r)
+{
+    return ((x - xs) * (x - xs) + (y - ys) * (y - ys) - r * r < 0);
 }
 
-int Intersection( int xc1 , int yc1 , int r1 , int xc2 , int yc2 , int r2  ){
-    int r1r2 = sqrt( ( xc2 - xc1 )*( xc2 - xc1 ) + ( yc2 - yc1  )*( yc2 - yc1 )  ) ;
-    if ( r1 + r2 < r1r2 ){
-        return -1 ;
-    }else if ( r1 + r2 == r1r2 ){
-        return 0 ;
-    }else{
-        return 1 ;
+int Intersection(int xc1, int yc1, int r1, int xc2, int yc2, int r2)
+{
+    int r1r2 = sqrt((xc2 - xc1) * (xc2 - xc1) + (yc2 - yc1) * (yc2 - yc1));
+    if (r1 + r2 < r1r2)
+    {
+        return -1;
+    }
+    else if (r1 + r2 == r1r2)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
     }
 }
 
@@ -172,27 +181,22 @@ void DrawCircle(HDC hdc, int xs, int ys, int R, COLORREF c, int choice)
 {
     if (choice == 0)
     {
-        printf("Direct Circle is drawn\n\n");
         DirectCircle(hdc, xs, ys, R, c);
     }
     else if (choice == 1)
     {
-        printf("Polar Circle is drawn\n\n");
         PolarCircle(hdc, xs, ys, R, c);
     }
     else if (choice == 2)
     {
-        printf("Iterative Polar Circle is drawn\n\n");
         IterativePolarCircle(hdc, xs, ys, R, c);
     }
     else if (choice == 3)
     {
-        printf("Midpoint Circle is drawn\n\n");
         MidPointCircle(hdc, xs, ys, R, c, -1);
     }
     else
     {
-        printf("Modified Midpoint Circle is drawn\n\n");
         ModifiedMidPointCircle(hdc, xs, ys, R, c);
     }
 }

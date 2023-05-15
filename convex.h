@@ -7,11 +7,9 @@
 
 using namespace std;
 
-const int M = 1e6;
-
-void scanLine(Point &s, Point &e, vector<Point> &table)
+void scanLine(Point s, Point e, vector<Point> &table)
 {
-    if (s.x == e.x)
+    if (s.y == e.y)
         return;
     if (s.y > e.y)
         swap(s, e);
@@ -58,7 +56,7 @@ void FillConvexPolygon(HDC hdc, vector<Point> &points, COLORREF c)
     vector<Point> table(MAX);
     for (int i = 0; i < MAX; i++)
     {
-        table[i] = Point(M, -M);
+        table[i] = Point(MAX, -MAX);
     }
     Point last = points.back();
     for (int i = 0; i < (int)points.size(); i++)

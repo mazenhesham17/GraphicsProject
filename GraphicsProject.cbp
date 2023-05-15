@@ -43,6 +43,9 @@
 		<Unit filename="circle.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="clipping.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="convex.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -50,6 +53,9 @@
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="curve.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="data.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="ellipse.h">
