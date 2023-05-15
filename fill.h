@@ -13,9 +13,13 @@ int dx[] = {+0, +0, +1, -1, +1, -1, +1, -1}, dy[] = {+1, -1, +0, +0, +1, -1, -1,
 void FillWithHermite(HDC hdc, int xleft, int ytop, int xright, int ybottom, COLORREF c)
 {
     int step = 15;
-    for (int i = xleft + step; i + step < xright; i += step)
+    int xmid1 = xleft + (xright - xleft) / 3;
+    int xmid2 = xright - (xright - xleft) / 3;
+    int ymid1 = ybottom + ( ytop - ybottom )/3 ;
+    int ymid2 = ytop - ( ytop - ybottom )/3 ;
+    for (int i = xleft + step ; i + step < xright; i += step )
     {
-        DrawCurve(hdc, Point(i, ytop), Point(i, ybottom), Point(i, ybottom), Point(xright - i / 2, ytop), c, 0);
+        DrawCurve(hdc, Point(i, ybottom), Point( xmid1 , ymid1), Point(i, ytop), Point( xmid2 , ymid2), c, 0);
     }
 }
 

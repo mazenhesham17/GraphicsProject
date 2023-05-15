@@ -347,7 +347,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
             hdc = GetDC(hwnd);
             xs = LOWORD(lParam);
             ys = HIWORD(lParam);
-            DrawSquare(hdc, xs, ys, xe, ye, 250, bordercolor);
+            DrawSquare(hdc, xs, ys, xe, ye, 200, bordercolor);
             FillWithHermite(hdc, xs, ys, xe, ye, fillcolor);
             screen.push_back(Data(idx, xs, ys, xe, ye, fillcolor, bordercolor, -1));
         }
