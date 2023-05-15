@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1684190977 source:e:\programming\graphics\graphicsproject\main.cpp
+1684191547 source:e:\programming\graphics\graphicsproject\main.cpp
 	<tchar.h>
 	<windows.h>
 	<string>
@@ -54,10 +54,10 @@
 	<vector>
 	"curve.h"
 
-1684191112 e:\programming\graphics\graphicsproject\data.h
+1684191543 e:\programming\graphics\graphicsproject\data.h
 	"csgraphics.h"
 	<vector>
 
-1684190949 e:\programming\graphics\graphicsproject\clipping.h
+1684191540 e:\programming\graphics\graphicsproject\clipping.h
 	<vector>
 
