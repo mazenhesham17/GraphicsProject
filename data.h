@@ -171,15 +171,15 @@ void Load(HDC hdc, vector<Data> &screen)
         case 16:
             if (cur.c != -1)
             {
-                temp = cur.v;
-                if (temp.size() == 2)
+                if (cur.c == 1)
                 {
-                    // line clipping
-                    DrawLine(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc, cur.c);
+                    // polygon clipping
+                    DrawPolygon(hdc, cur.v, cur.fc);
                 }
                 else
                 {
-                    // polygon clipping
+                    // line clipping
+                    DrawLine(hdc, cur.v[0].x, cur.v[0].y, cur.v[1].x, cur.v[1].y, cur.bc, cur.c);
                 }
             }
             else

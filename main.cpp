@@ -302,6 +302,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
                 SetWindowPos(hconsole, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
                 SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
             }
+            xleft = ytop = xright = ybottom = -1;
         }
         break;
     case WM_LBUTTONDBLCLK:
@@ -379,20 +380,27 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         }
         else if (idx == 16)
         {
-            if (x1 == -1)
+            if (xleft == -1)
             {
-                x1 = LOWORD(lParam);
-                y1 = HIWORD(lParam);
+                xleft = LOWORD(lParam);
+                ytop = HIWORD(lParam);
+            }
+            else if (xright == -1)
+            {
+                hdc = GetDC(hwnd);
+                xright = LOWORD(lParam);
+                ybottom = HIWORD(lParam);
+                DrawRectangle(hdc, xleft, ytop, xright, ybottom, bordercolor);
+                screen.push_back(Data(idx, xleft, ytop, xright, ybottom, fillcolor, bordercolor, -1));
             }
             else
             {
-                hdc = GetDC(hwnd);
-                x2 = LOWORD(lParam);
-                y2 = HIWORD(lParam);
-                DrawRectangle(hdc, x1, y1, x2, y2, bordercolor);
-                screen.push_back(Data(idx, x1, y1, x2, y2, fillcolor, bordercolor, -1));
-                xleft = x1, ytop = y1, xright = x2, ybottom = y2;
-                x1 = y1 = x2 = y2 = -1;
+                if (choice == 1)
+                {
+                    xs = LOWORD(lParam);
+                    ys = HIWORD(lParam);
+                    points.push_back(Point(xs, ys));
+                }
             }
         }
         else if (idx == 17)
@@ -482,7 +490,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
         {
             if (choice == 1)
             {
-                // Polygon to be
+                if (HodgmanClipping(points, xleft, ytop, xright, ybottom))
+                {
+                    hdc = GetDC(hwnd);
+                    DrawPolygon(hdc, points, fillcolor);
+                    screen.push_back(Data(idx, points, fillcolor, bordercolor, choice));
+                }
+                points.clear();
             }
             else
             {

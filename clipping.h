@@ -1,6 +1,10 @@
 #ifndef CLIPPING_H_INCLUDED
 #define CLIPPING_H_INCLUDED
 
+#include <vector>
+
+using namespace std;
+
 bool InsideRectangle(int x, int y, int xleft, int ytop, int xright, int ybottom)
 {
     return (x >= xleft && x <= xright && y <= ytop && y >= ybottom);
@@ -91,6 +95,87 @@ bool CohenClipping(int &xs, int &ys, int &xe, int &ye, int xleft, int ytop, int 
     xs = round(x1), ys = round(y1);
     xe = round(x2), ye = round(y2);
     return true;
+}
+
+bool Inside(Point &v, int edge, int choice)
+{
+    if (choice == 0)
+    {
+        // left
+        return v.x >= edge;
+    }
+    else if (choice == 1)
+    {
+        // top
+        return v.y <= edge;
+    }
+    else if (choice == 2)
+    {
+        // right
+        return v.x <= edge;
+    }
+    else
+    {
+        // bottom
+        return v.y >= edge;
+    }
+}
+
+Point Intersetion(int x1, int y1, int x2, int y2, int edge, int choice)
+{
+    double x, y;
+    if (choice & 1)
+    {
+        HIntersect(x1, y1, x2, y2, edge, x, y);
+    }
+    else
+    {
+        VIntersect(x1, y1, x2, y2, edge, x, y);
+    }
+    return Point(x, y);
+}
+
+vector<Point> ClipWithEdge(vector<Point> &points, int edge, int choice)
+{
+    if (points.size() < 2)
+        return {};
+    vector<Point> temp;
+    Point last = points.back();
+    bool last_in = Inside(last, edge, choice);
+    for (int i = 0; i < (int)points.size(); i++)
+    {
+        Point cur = points[i];
+        bool cur_in = Inside(cur, edge, choice);
+        if (cur_in)
+        {
+            if (!last_in)
+            {
+                temp.push_back(Intersetion(last.x, last.y, cur.x, cur.y, edge, choice));
+            }
+            temp.push_back(cur);
+        }
+        else
+        {
+            if (last_in)
+            {
+                temp.push_back(Intersetion(last.x, last.y, cur.x, cur.y, edge, choice));
+            }
+        }
+        last = cur, last_in = cur_in;
+    }
+    return temp;
+}
+
+bool HodgmanClipping(vector<Point> &points, int xleft, int ytop, int xright, int ybottom)
+{
+    if (points.size() < 2)
+        return false;
+    int edge[] = {xleft, ytop, xright, ybottom};
+    for (int i = 0; i < 4; i++)
+    {
+        points = ClipWithEdge(points, edge[i], i);
+    }
+    return points.size() > 2;
 }
 
 #endif // CLIPPING_H_INCLUDED
