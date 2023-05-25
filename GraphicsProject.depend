@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1684191547 source:e:\programming\graphics\graphicsproject\main.cpp
+1684985324 source:e:\programming\graphics\graphicsproject\main.cpp
 	<tchar.h>
 	<windows.h>
 	<string>
@@ -40,11 +40,11 @@
 	"data.h"
 	"clipping.h"
 
-1684108438 e:\programming\graphics\graphicsproject\ellipse.h
+1685022854 e:\programming\graphics\graphicsproject\ellipse.h
 	<cmath>
 	<algorithm>
 
-1684101876 e:\programming\graphics\graphicsproject\convex.h
+1684985348 e:\programming\graphics\graphicsproject\convex.h
 	<vector>
 	"line.h"
 	"curve.h"

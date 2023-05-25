@@ -58,7 +58,7 @@ void MidPointEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c)
     int asquare = a * a, bsquare = b * b;
     int dinit = bsquare - b * asquare + asquare / 4;
     Draw4Points(hdc, xs, ys, x, y, c);
-    while (2 * bsquare * x <= 2 * asquare * y)
+    while ( bsquare * x <= asquare * y)
     {
         Draw4Points(hdc, xs, ys, x, y, c);
         if (dinit <= 0)
@@ -81,7 +81,7 @@ void MidPointEllipse(HDC hdc, int xs, int ys, int a, int b, COLORREF c)
         if (dinit <= 0)
         {
             x++;
-            dinit += (2 * x) * bsquare + (-2 * y + 1) * asquare;
+            dinit += (2 * x + 1) * bsquare + (-2 * y + 1) * asquare;
         }
         else
         {
